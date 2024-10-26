@@ -150,7 +150,7 @@ def edit_profile():
             pass
         
         flash('Profile updated successfully !', 'success')
-        return redirect(url_for('profile'))
+        return redirect(url_for('Question_Management.profile'))
 
     return render_template('edit_profile.html', user=user_data)
 
