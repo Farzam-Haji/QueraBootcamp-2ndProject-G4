@@ -30,28 +30,6 @@ cursor = connection.cursor()
 
 # #============================================= Users ===============================================
 
-# cursor.execute('''
-# CREATE TABLE IF NOT EXISTS users (
-#                id INTEGER PRIMARY KEY AUTOINCREMENT,
-#                username TEXT NOT NULL UNIQUE,
-#                password TEXT NOT NULL,
-#                email TEXT NOT NULL UNIQUE,
-#                quiz_results REAL,
-#                login BOOL NOT NULL DEFAULT 0, -- (0 = False)(1 = True)
-#                admin BOOL NOT NULL DEFAULT 0  -- (0 = not admin)(1 = admin)
-#                )
-# ''')
-
-# #==================================================================================================
-
-# #=========================================== Deafult rows =========================================
-
-#admin user:
-# cursor.execute("INSERT INTO users (username, password, email, admin) VALUES (?, ?, ?, ?)",
-#                ('admin', 'admin', 'admin.admin@gmail.com', 1))
-
-
-
 # # table
 # cursor.execute('''
 # CREATE TABLE IF NOT EXISTS users (
@@ -67,33 +45,23 @@ cursor = connection.cursor()
 #     admin BOOLEAN NOT NULL
 # )
 # ''')
+# #==================================================================================================
 
+# #=========================================== Deafult rows =========================================
 
+# users:
 # cursor.execute("INSERT INTO users (username, first_name, last_name, email, age, password, quiz_results, login, admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
 #                ('user1', 'username1', 'userlastname1', 'useremail1@example.com', 10, 'password1', '10, 20, 30', True, True ))
-cursor.execute("INSERT INTO users (username, first_name, last_name, email, age, password, quiz_results, login, admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-               ('user2', 'username2', 'userlastname2', 'useremail2@example.com', 20, 'password2', '20, 30, 40', True, False ))
-cursor.execute("INSERT INTO users (username, first_name, last_name, email, age, password, quiz_results, login, admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-               ('user3', 'username3', 'userlastname3', 'useremail3@example.com', 30, 'password3', '30, 40, 50', True, False ))
-cursor.execute("INSERT INTO users (username, first_name, last_name, email, age, password, quiz_results, login, admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-               ('user4', 'username4', 'userlastname4', 'useremail4@example.com', 40, 'password4', '40, 50, 60', True, False ))
-cursor.execute("INSERT INTO users (username, first_name, last_name, email, age, password, quiz_results, login, admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-               ('user5', 'username5', 'userlastname5', 'useremail5@example.com', 50, 'password5', '50, 60, 70', True, False ))
+# cursor.execute("INSERT INTO users (username, first_name, last_name, email, age, password, quiz_results, login, admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+#                ('user2', 'username2', 'userlastname2', 'useremail2@example.com', 20, 'password2', '20, 30, 40', True, False ))
+# cursor.execute("INSERT INTO users (username, first_name, last_name, email, age, password, quiz_results, login, admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+#                ('user3', 'username3', 'userlastname3', 'useremail3@example.com', 30, 'password3', '30, 40, 50', True, False ))
+# cursor.execute("INSERT INTO users (username, first_name, last_name, email, age, password, quiz_results, login, admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+#                ('user4', 'username4', 'userlastname4', 'useremail4@example.com', 40, 'password4', '40, 50, 60', True, False ))
+# cursor.execute("INSERT INTO users (username, first_name, last_name, email, age, password, quiz_results, login, admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+#                ('user5', 'username5', 'userlastname5', 'useremail5@example.com', 50, 'password5', '50, 60, 70', True, False ))
 
 
-# users = [
-#     ('user1', 'username1', 'userlastname1', 'useremail1@example.com', 10, 'password1', '10, 20, 30', True, True ),
-#     ('user2', 'username2', 'userlastname2', 'useremail2@example.com', 20, 'password2', '20, 30, 40', True, False ),
-#     ('user3', 'username3', 'userlastname3', 'useremail3@example.com', 30, 'password3', '30, 40, 50', True, False ),
-#     ('user4', 'username4', 'userlastname4', 'useremail4@example.com', 40, 'password4', '40, 50, 60', True, False ),
-#     ('user5', 'username5', 'userlastname5', 'useremail5@example.com', 50, 'password5', '50, 60, 70', True, False )
-# ]
-
-
-# cursor.executemany('''
-# INSERT INTO users (username, first_name, last_name, email, age, password, quiz_results, login, admin)
-# VALUES (?, ?, ?, ?, ?, ?)
-# ''', users)
 
 # categories:
 # cursor.execute("PRAGMA foreign_keys = ON")
@@ -119,9 +87,7 @@ cursor.execute("INSERT INTO users (username, first_name, last_name, email, age, 
 
 # #===================================================================================================
 
-
-
-
+# for deleting users:
 # def delete_user(user_id):
 #     connection = sqlite3.connect('quiz.db')
 #     cursor = connection.cursor()
