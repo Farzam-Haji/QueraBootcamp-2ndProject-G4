@@ -1,8 +1,10 @@
 from flask import Flask, render_template, redirect, url_for, request, flash, g, Blueprint, session, abort
+from flask_bcrypt import Bcrypt
 import sqlite3
 from functools import wraps
 
 profile1 = Blueprint("profile1", __name__, template_folder="templates")
+bcrypt = Bcrypt()
 
 def get_db():
     if 'db' not in g:
@@ -52,8 +54,9 @@ def edit_profile(username):
         password = request.form['password']
 
         if password:  #update the password if it's not empty
+            hash_pass = bcrypt.generate_password_hash(password).decode('utf-8')
             conn.execute('UPDATE users SET first_name = ?, last_name = ?, email = ?, age = ?, password = ? WHERE username = ?',
-                         (first_name, last_name, email, age, password, username))
+                         (first_name, last_name, email, age, hash_pass, username))
         else:  # Update without changing the password
             conn.execute('UPDATE users SET first_name = ?, last_name = ?, email = ?, age = ? WHERE username = ?',
                          (first_name, last_name, email, age, username))
