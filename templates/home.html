@@ -3,8 +3,71 @@
 {% block content %}
 
 {% include 'flash_.html' %}
-<h1>Quiz Project</h1>
-<h2>Quera Bootcamp</h2>
-<h3>Python G4</h3>
 
-{%  endblock %}
+<div class="container-fluid" style="display: flex; height: 100vh;">
+    <!-- left -->
+    <div class="left-side" style="flex: 1; position: relative;">
+        <img src="{{ url_for('static', filename='images/home1.jpg') }}" alt="Static Image" style="width: 100%; height: 100%; object-fit: cover;">
+        <div class="welcome-text">
+            <h1>Welcome to the Quiz Challenge!</h1>
+            <p>Test your knowledge and have fun!</p>
+        </div>
+    </div>
+
+    <!--right -->
+    <div class="right-side" style="flex: 1; position: relative; overflow: hidden;">
+        <div class="image-slider">
+            <img src="{{ url_for('static', filename='images/home2.jpg') }}" alt="Image 2" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none;">
+            <img src="{{ url_for('static', filename='images/home3.jpg') }}" alt="Image 3" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none;">
+            <img src="{{ url_for('static', filename='images/home4.jpg') }}" alt="Image 4" style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none;">
+        </div>
+    </div>
+</div>
+
+<script>
+    const images = document.querySelectorAll('.right-side .image-slider img');
+    let currentIndex = 0;
+
+    // first image
+    images[currentIndex].style.display = 'block';
+
+    function showNextImage() {
+        //image now
+        images[currentIndex].style.display = 'none';
+        
+        // index
+        currentIndex = (currentIndex + 1) % images.length;
+        
+        //next image
+        images[currentIndex].style.display = 'block';
+    }
+
+    // image slider
+    setInterval(showNextImage, 3000); // 3 second
+</script>
+
+<style>
+    .welcome-text {
+        position: absolute;
+        top: 250px; /* top */
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+        text-align: center;
+        z-index: 10; 
+    }
+
+    .welcome-text h1 {
+        font-size: 3rem;
+        margin: 0;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    .welcome-text p {
+        font-size: 1.5rem;
+        margin-top: 10px;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+    }
+</style>
+
+{% endblock %}
