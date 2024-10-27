@@ -55,10 +55,12 @@ def add_Question(category):
 
         Question = request.form.get('question')
         Answer = request.form.get('answer')
+        Wrong_Answers = request.form.getlist('wrong')
+        wrong_answer_string = ",".join(Wrong_Answers)
         Category = category
         cursor = get_db().cursor()
-        cursor.execute("INSERT INTO questions (category, question, answer) VALUES (?, ?, ?)",
-            (Category, Question, Answer))
+        cursor.execute("INSERT INTO questions (category, question, answer, wrong) VALUES (?, ?, ?, ?)",
+            (Category, Question, Answer, wrong_answer_string))
         get_db().commit()
         flash('Added Successfully', 'success')
 
