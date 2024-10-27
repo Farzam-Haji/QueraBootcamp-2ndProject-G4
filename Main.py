@@ -5,6 +5,7 @@ from login_signup import login_signup
 from profile1 import profile1
 from Quiz import Quiz
 
+
 app = Flask (__name__)
 app.register_blueprint(Question_Management, url_prefix="")
 app.register_blueprint(login_signup, url_prefix="")
