@@ -27,13 +27,11 @@ def get_questions(category):
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM questions WHERE category = ?", (category,))
     question_records = cursor.fetchall()
-    
     questions = []
     for record in question_records:
         wrong_answers = record['wrong'].split(",")
         options = [record['answer']] + wrong_answers
         random.shuffle(options)
-
         questions.append({
             'question': record['question'],
             'answer': record['answer'],
@@ -100,10 +98,24 @@ def quiz():
 # Show final result
 @Quiz.route('/result')
 def show_result():
-    score = session.get('score', 0)
+    score = session.get('score',0)
     num_questions = session.get('num_questions', 1)
+    
+
+    username = session.get('username')
+    if username:
+        db = get_db()
+        cursor = db.cursor()
+        
+
+        cursor.execute("SELECT quiz_results FROM users WHERE username = ?", (username,))
+        result_row = cursor.fetchone()
+        
+        if result_row:
+            current_results = result_row['quiz_results']
+            new_results = f"{current_results},{score}" if current_results else str(score)
+            cursor.execute("UPDATE users SET quiz_results = ? WHERE username = ?", (new_results, username))
+            db.commit()
+
     feedback = f"Your score is {score} out of {num_questions}."
     return render_template('results.html', score=score, feedback=feedback)
-
-# if __name__ == '__main__':
-#     app.run(debug=True)
