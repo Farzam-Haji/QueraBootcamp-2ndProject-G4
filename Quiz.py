@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, g
 import sqlite3
 import random
 from functools import wraps
+from profile1 import login_required
 
 Quiz = Blueprint("Quiz", __name__)
 # app.secret_key = "your_secret_key"
@@ -53,12 +54,14 @@ def admin_required(f):
 
 # Show quiz categories
 @Quiz.route('/quiz/categories')
+@login_required
 def show_categories():
     categories = get_categories()  # Fetch categories from the database
     return render_template('categories.html', categories=categories)
 
 # Start quiz based on selected category
 @Quiz.route('/quiz/<category>', methods=['GET', 'POST'])
+@login_required
 def start_quiz(category):
     if request.method == 'POST':
         num_questions = int(request.form.get('num_questions'))
@@ -81,6 +84,7 @@ def start_quiz(category):
 
 # Show quiz questions
 @Quiz.route('/quiz', methods=['GET', 'POST'])
+@login_required
 def quiz():
     if 'questions' not in session or session['current_question'] >= session['num_questions']:
         return redirect(url_for('Quiz.show_result'))
@@ -97,6 +101,7 @@ def quiz():
 
 # Show final result
 @Quiz.route('/result')
+@login_required
 def show_result():
     score = session.get('score',0)
     num_questions = session.get('num_questions', 1)
