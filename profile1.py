@@ -87,7 +87,10 @@ def quiz_marks(username):
     if user is None:
         abort(404)
 
-    #quiz list (check if it works with Quiz.py)
-    quiz_marks = user['quiz_results'].split(',') if user['quiz_results'] else []
+ 
+    quiz_results = str(user['quiz_results']) if isinstance(user['quiz_results'], float) else user['quiz_results']
+    
+
+    quiz_marks = quiz_results.split(',') if quiz_results else []
 
     return render_template('quiz_marks.html', username=username, marks=quiz_marks)
