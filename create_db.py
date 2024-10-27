@@ -57,6 +57,10 @@ cursor = connection.cursor()
 #                ('admin', 'admin', 'admin.admin@gmail.com', 'adminkhan', 'adminian', 1))
 # cursor.execute ("INSERT INTO users (username, password, email, first_name, last_name, admin, quiz_results) VALUES (?, ?, ?, ?, ?, ?, ?)",
 #                ('user3', 'password3', 'useremail3@gmail.com', 'userfirstname3', 'userlastname3', 0, '10, 9, 8, 7, 10, 4'))
+# admin_hash_pass = '$2b$12$sf2zTMwFh5d/VRMcan6fCeB6zWA7EcWvVblvgVslFyDRGPbRDf2lC'
+# cursor.execute("UPDATE users SET password=? WHERE username=?", (admin_hash_pass, 'admin'))
+
+
 
 #categories:
 # cursor.execute("PRAGMA foreign_keys = ON")
