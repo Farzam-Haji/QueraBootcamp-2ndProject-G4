@@ -1,7 +1,9 @@
 from flask import Flask, Blueprint, g, render_template, redirect, url_for, request, flash, session
+from flask_bcrypt import Bcrypt
 import sqlite3
 
 login_signup = Blueprint("login_signup", __name__, template_folder="templates")
+bcrypt = Bcrypt()
 
 def get_db():
     if 'db' not in g:
@@ -25,15 +27,17 @@ def login():
         try:
             cur.execute('SELECT * FROM users WHERE username=?',(input_username,))
             hovered_user = cur.fetchone()
-            if hovered_user and hovered_user['password'] == input_password:
-                cur.execute("UPDATE users SET login=? WHERE username=?", (1, input_username))
-                get_db().commit() 
-                session['username'] = input_username
-                flash('Successfull LogIn', 'success')
-                return redirect(url_for('index')) # change to profile maybe
-            elif hovered_user and hovered_user['password'] != input_password:
-                flash('Wrong Password', 'danger')
-                return render_template('login.html')
+            if hovered_user:
+                user_hash_pass = hovered_user['password']
+                if bcrypt.check_password_hash(user_hash_pass, input_password):
+                    cur.execute("UPDATE users SET login=? WHERE username=?", (1, input_username))
+                    get_db().commit() 
+                    session['username'] = input_username
+                    flash('Successfull LogIn', 'success')
+                    return redirect(url_for('index')) # change to profile maybe
+                else:
+                    flash('Wrong Password', 'danger')
+                    return render_template('login.html')
             else:
                 flash('Wrong Username', 'danger')
                 return render_template('login.html')   
@@ -52,6 +56,7 @@ def signup():
         intended_username = request.form.get('username')
         intended_email = request.form.get('email')
         intended_password = request.form.get('password')
+        hash_pass = bcrypt.generate_password_hash(intended_password).decode('utf-8')
 
         cur = get_db().cursor()
         cur.execute("SELECT username, email FROM users")
@@ -61,7 +66,7 @@ def signup():
 
         if intended_username not in username_list and intended_email not in email_list:
             cur.execute("INSERT INTO users (username, email, password) VALUES (?, ?, ?)", 
-                        (intended_username, intended_email, intended_password))  #mostaghim log in beshe ?
+                        (intended_username, intended_email, hash_pass))  #mostaghim log in beshe ?
             get_db().commit()
             flash('Successfull SignUp', 'success')
             return render_template('signup_or_login.html')
