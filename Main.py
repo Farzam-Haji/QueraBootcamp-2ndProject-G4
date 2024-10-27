@@ -10,7 +10,7 @@ app.register_blueprint(Question_Management, url_prefix="")
 app.register_blueprint(login_signup, url_prefix="")
 app.register_blueprint(profile1, url_prefix="")
 app.register_blueprint(Quiz, url_prefix="")
-app.secret_key = 'fwugyewqlufywqliugfqw'
+app.secret_key = '978425f807853d5b45aa67dc5e37fcdb95ee73e1d250930cf7aaf6480254b803'
 
 
 def get_db():
