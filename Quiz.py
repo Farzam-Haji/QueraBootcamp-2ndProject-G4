@@ -105,6 +105,8 @@ def quiz():
 def show_result():
     score = session.get('score',0)
     num_questions = session.get('num_questions', 1)
+    score = score/num_questions*100
+    num_questions = 100
     
 
     username = session.get('username')
