@@ -1,10 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for, session, g
+from flask import Flask, render_template, request, redirect, url_for, session, g, Blueprint
 import sqlite3
 import random
 from functools import wraps
 
-app = Flask(__name__)
-app.secret_key = "your_secret_key"
+Quiz = Blueprint("Quiz", __name__)
+# app.secret_key = "your_secret_key"
 
 # Database connection
 def get_db():
@@ -13,11 +13,11 @@ def get_db():
         g.db.row_factory = sqlite3.Row  # Fetch rows as dictionaries
     return g.db
 
-@app.teardown_appcontext
-def close_db(error):
-    db = g.pop('db', None)
-    if db is not None:
-        db.close()
+# @app.teardown_appcontext
+# def close_db(error):
+#     db = g.pop('db', None)
+#     if db is not None:
+#         db.close()
 
 # Fetch all quiz categories from the database
 def get_categories():
@@ -46,18 +46,18 @@ def admin_required(f):
     return decoratorrr
 
 # Home page
-@app.route('/')
-def index():
-    return render_template('index.html')
+# @Quiz.route('/')
+# def index():
+#     return render_template('index.html')
 
 # Show quiz categories
-@app.route('/categories')
+@Quiz.route('/quiz/categories')
 def show_categories():
     categories = get_categories()  # Fetch categories from the database
     return render_template('categories.html', categories=categories)
 
 # Start quiz based on selected category
-@app.route('/quiz/<category>', methods=['GET', 'POST'])
+@Quiz.route('/quiz/<category>', methods=['GET', 'POST'])
 def start_quiz(category):
     if request.method == 'POST':
         num_questions = int(request.form.get('num_questions'))
@@ -68,14 +68,14 @@ def start_quiz(category):
         selected_questions = random.sample(questions, min(num_questions, len(questions)))  # Ensure we don't exceed available questions
         session['questions'] = selected_questions
         session['current_question'] = 0
-        return redirect(url_for('quiz'))
+        return redirect(url_for('Quiz.quiz'))
     return render_template('select_num_questions.html', category=category)
 
 # Show quiz questions
-@app.route('/quiz', methods=['GET', 'POST'])
+@Quiz.route('/quiz', methods=['GET', 'POST'])
 def quiz():
     if 'questions' not in session or session['current_question'] >= session['num_questions']:
-        return redirect(url_for('show_result'))
+        return redirect(url_for('Quiz.show_result'))
     
     question = session['questions'][session['current_question']]
     if request.method == 'POST':
@@ -83,17 +83,17 @@ def quiz():
         if answer == question['answer']:
             session['score'] += 1
         session['current_question'] += 1
-        return redirect(url_for('quiz'))
+        return redirect(url_for('Quiz.quiz'))
     
     return render_template('quiz.html', question=question, question_num=session['current_question'] + 1)
 
 # Show final result
-@app.route('/result')
+@Quiz.route('/result')
 def show_result():
     score = session.get('score', 0)
     num_questions = session.get('num_questions', 0)
     feedback = f"Your score is {score} out of {num_questions}."
-    return render_template('result.html', score=score, feedback=feedback)
+    return render_template('results.html', score=score, feedback=feedback)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# if __name__ == '__main__':
+#     app.run(debug=True)
