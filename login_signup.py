@@ -1,6 +1,8 @@
 from flask import Flask, Blueprint, g, render_template, redirect, url_for, request, flash, session
 from flask_bcrypt import Bcrypt
 import sqlite3
+from functools import wraps
+
 
 login_signup = Blueprint("login_signup", __name__, template_folder="templates")
 bcrypt = Bcrypt()
@@ -11,13 +13,26 @@ def get_db():
         g.db.row_factory = sqlite3.Row
     return g.db
 
+def already_login(f):
+    @wraps(f)
+    def login_decorator(*args, **kwargs):
+        if 'username' in session:
+            user = get_db().execute('SELECT * FROM users WHERE username = ?', (session['username'],)).fetchone()
+            return render_template ('profile.html', user=user)
+        return f(*args, **kwargs)
+    return login_decorator
+
+
+
 
 @login_signup.route("/login_signup")
+@already_login
 def login_or_signup():
     return render_template('signup_or_login.html')
 
 
 @login_signup.route("/login", methods = ['GET', 'POST'])
+@already_login
 def login():
     if request.method == 'POST':
         input_username = request.form.get('username')
@@ -69,7 +84,7 @@ def signup():
                         (intended_username, intended_email, hash_pass))  #mostaghim log in beshe ?
             get_db().commit()
             flash('Successfull SignUp', 'success')
-            return render_template('signup_or_login.html')
+            return redirect(url_for("login_signup.login_or_signup"))
         else:
             if intended_username in username_list and intended_email in email_list:
                 flash('Username and Email not available', 'danger')
